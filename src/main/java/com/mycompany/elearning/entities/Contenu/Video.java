@@ -21,13 +21,9 @@ public class Video {
     private Long id;
     
     @Column(nullable = false)
-    private String url;
+    private String url; // URL YouTube, Vimeo, etc.
     
-    private Integer duration;
-    
-    private String resolution;
-    
-    private Long fileSize;
+    private Integer duration; // en secondes
     
     @OneToOne
     @JoinColumn(name = "lesson_id", nullable = false)
@@ -66,22 +62,6 @@ public class Video {
     
     public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-    
-    public String getResolution() {
-        return resolution;
-    }
-    
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
-    }
-    
-    public Long getFileSize() {
-        return fileSize;
-    }
-    
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
     }
     
     public Lesson getLesson() {

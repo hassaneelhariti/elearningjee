@@ -1,4 +1,4 @@
-package git com.mycompany.elearning.controller;
+package com.mycompany.elearning.controller;
 
 import com.mycompany.elearning.entities.Utilisateurs.Student;
 import com.mycompany.elearning.entities.Utilisateurs.User;

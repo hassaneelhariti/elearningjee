@@ -66,3 +66,16 @@ target/
 # Système
 .DS_Store
 Thumbs.db
+
+
+# Fichiers de configuration sensibles
+hibernate.cfg.xml
+persistence.xml
+META-INF/persistence.xml
+application.properties
+application.yml
+*.config.xml
+
+# Dossiers de configuration
+/config/
+/META-INF/

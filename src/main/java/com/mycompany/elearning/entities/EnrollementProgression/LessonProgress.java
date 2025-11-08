@@ -8,8 +8,6 @@ package com.mycompany.elearning.entities.EnrollementProgression;
 import com.mycompany.elearning.entities.Contenu.Lesson;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 /**
  *
  * @author ousam713
@@ -26,11 +24,7 @@ public class LessonProgress {
     @Column(nullable = false)
     private Boolean isCompleted;
     
-    private Integer lastPosition;
-    
-    private LocalDateTime completedDate;
-    
-    private Integer timeSpent;
+    private Integer lastPosition; // Position dans la vidéo en secondes
     
     @ManyToOne
     @JoinColumn(name = "enrollment_id", nullable = false)
@@ -44,7 +38,6 @@ public class LessonProgress {
     public LessonProgress() {
         this.isCompleted = false;
         this.lastPosition = 0;
-        this.timeSpent = 0;
     }
     
     public LessonProgress(Enrollment enrollment, Lesson lesson) {
@@ -52,7 +45,6 @@ public class LessonProgress {
         this.lesson = lesson;
         this.isCompleted = false;
         this.lastPosition = 0;
-        this.timeSpent = 0;
     }
     
     // Getters et Setters
@@ -78,22 +70,6 @@ public class LessonProgress {
     
     public void setLastPosition(Integer lastPosition) {
         this.lastPosition = lastPosition;
-    }
-    
-    public LocalDateTime getCompletedDate() {
-        return completedDate;
-    }
-    
-    public void setCompletedDate(LocalDateTime completedDate) {
-        this.completedDate = completedDate;
-    }
-    
-    public Integer getTimeSpent() {
-        return timeSpent;
-    }
-    
-    public void setTimeSpent(Integer timeSpent) {
-        this.timeSpent = timeSpent;
     }
     
     public Enrollment getEnrollment() {

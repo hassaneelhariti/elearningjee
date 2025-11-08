@@ -5,14 +5,9 @@
 package com.mycompany.elearning.entities.Contenu;
 
 
-
-import com.mycompany.elearning.entities.CategoriesTags.Category;
-import com.mycompany.elearning.entities.CategoriesTags.Tag;
 import com.mycompany.elearning.entities.EnrollementProgression.Enrollment;
-import com.mycompany.elearning.entities.Interactions.Review;
 import com.mycompany.elearning.entities.Utilisateurs.Teacher;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,22 +30,12 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String description;
     
-    private String level;
+    private String level; // Beginner, Intermediate, Advanced
     
-    private String language;
-    
-    private String thumbnail;
-    
-    private Integer duration;
-    
-    private Float rating;
-    
-    private Integer totalEnrollments;
+    private String thumbnail; // URL de l'image
     
     @Column(nullable = false)
     private LocalDateTime dateCreated;
-    
-    private LocalDateTime lastUpdated;
     
     @Column(nullable = false)
     private Boolean isPublished;
@@ -62,46 +47,22 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Section> sections;
     
-    @ManyToMany
-    @JoinTable(
-        name = "course_category",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categories;
-    
-    @ManyToMany
-    @JoinTable(
-        name = "course_tag",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags;
-    
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments;
-    
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Review> reviews;
     
     // Constructeurs
     public Course() {
         this.dateCreated = LocalDateTime.now();
         this.isPublished = false;
-        this.totalEnrollments = 0;
-        this.rating = 0.0f;
     }
     
-    public Course(String title, String description, String level, String language, Teacher teacher) {
+    public Course(String title, String description, String level, Teacher teacher) {
         this.title = title;
         this.description = description;
         this.level = level;
-        this.language = language;
         this.teacher = teacher;
         this.dateCreated = LocalDateTime.now();
         this.isPublished = false;
-        this.totalEnrollments = 0;
-        this.rating = 0.0f;
     }
     
     // Getters et Setters
@@ -137,14 +98,6 @@ public class Course {
         this.level = level;
     }
     
-    public String getLanguage() {
-        return language;
-    }
-    
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-    
     public String getThumbnail() {
         return thumbnail;
     }
@@ -153,44 +106,12 @@ public class Course {
         this.thumbnail = thumbnail;
     }
     
-    public Integer getDuration() {
-        return duration;
-    }
-    
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-    
-    public Float getRating() {
-        return rating;
-    }
-    
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
-    
-    public Integer getTotalEnrollments() {
-        return totalEnrollments;
-    }
-    
-    public void setTotalEnrollments(Integer totalEnrollments) {
-        this.totalEnrollments = totalEnrollments;
-    }
-    
     public LocalDateTime getDateCreated() {
         return dateCreated;
     }
     
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
-    }
-    
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
-    }
-    
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
     }
     
     public Boolean getIsPublished() {
@@ -217,35 +138,11 @@ public class Course {
         this.sections = sections;
     }
     
-    public List<Category> getCategories() {
-        return categories;
-    }
-    
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
-    
-    public List<Tag> getTags() {
-        return tags;
-    }
-    
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-    
     public List<Enrollment> getEnrollments() {
         return enrollments;
     }
     
     public void setEnrollments(List<Enrollment> enrollments) {
         this.enrollments = enrollments;
-    }
-    
-    public List<Review> getReviews() {
-        return reviews;
-    }
-    
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
     }
 }
