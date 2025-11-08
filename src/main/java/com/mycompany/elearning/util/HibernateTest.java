@@ -1,4 +1,4 @@
-package com.mycompany.elearning.controller;
+package com.mycompany.elearning.util;
 
 import com.mycompany.elearning.entities.Utilisateurs.Student;
 import com.mycompany.elearning.entities.Utilisateurs.User;

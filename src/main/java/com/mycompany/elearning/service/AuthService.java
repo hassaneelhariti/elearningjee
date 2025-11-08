@@ -7,6 +7,7 @@
 package com.mycompany.elearning.service;
 
 
+import com.mycompany.elearning.dao.UserDAO;
 import com.mycompany.elearning.entities.Utilisateurs.User;
 import com.mycompany.elearning.entities.Utilisateurs.Student;
 import com.mycompany.elearning.entities.Utilisateurs.Teacher;
