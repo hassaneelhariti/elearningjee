@@ -1,47 +1,36 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ===========================================
+# FICHIERS DE TEST ET CONFIGURATION LOCALE
+# ===========================================
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
+# Fichiers de test Hibernate locaux
+hibernate.cfg.xml
+src/main/resources/hibernate.cfg.xml
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Fichiers de test unitaires locaux
+*.test
+*Test.java
+src/main/java/com/mycompany/elearning/controller/HibernateTest.java
 
-### VS Code ###
-.vscode/
+# Bases de données de test locales
+*.db
+*.sqlite
+test-db/
 
-### Mac OS ###
-.DS_Store
+# Logs de test
+test-output/
+*.log
 
-# IntelliJ
+# ===========================================
+# INTEGRATION DEVELOPMENT ENVIRONMENT (IDE)
+# ===========================================
+
+# IntelliJ IDEA
 .idea/
 *.iws
 *.iml
 *.ipr
+*.orig
 out/
 
 # NetBeans
@@ -52,30 +41,45 @@ dist/
 nbactions.xml
 nb-configuration.xml
 
-# Maven
-target/
-*.jar
-*.war
-*.ear
+# Eclipse
+.settings/
+.classpath
+.project
+bin/
 
-# Logs
+# VS Code
+.vscode/
+
+# ===========================================
+# MAVEN
+# ===========================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ===========================================
+# SYSTEM FILES
+# ===========================================
 *.log
 *.tmp
 *.cache
-
-# Système
 .DS_Store
 Thumbs.db
 
+# ===========================================
+# APPLICATION SPECIFIC
+# ===========================================
+# Fichiers de configuration locale (ne pas partager les mots de passe)
+application-local.properties
+application-dev.properties
 
-# Fichiers de configuration sensibles
-hibernate.cfg.xml
-persistence.xml
-META-INF/persistence.xml
-application.properties
-application.yml
-*.config.xml
-
-# Dossiers de configuration
-/config/
-/META-INF/
+# Uploads utilisateurs
+uploads/
+temp/
