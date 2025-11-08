@@ -5,10 +5,9 @@
 package com.mycompany.elearning.entities.EnrollementProgression;
 
 
+import com.mycompany.elearning.entities.EnrollementProgression.Enrollment;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-
 /**
  *
  * @author ousam713

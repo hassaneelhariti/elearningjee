@@ -6,10 +6,7 @@ package com.mycompany.elearning.entities.Contenu;
 
 
 import com.mycompany.elearning.entities.EnrollementProgression.LessonProgress;
-import com.mycompany.elearning.entities.Interactions.Comment;
-import com.mycompany.elearning.entities.QuizTests.Quiz;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 
@@ -32,11 +29,6 @@ public class Lesson {
     @Column(nullable = false)
     private Integer orderIndex;
     
-    private Integer duration;
-    
-    @Column(nullable = false)
-    private Boolean isFree;
-    
     @ManyToOne
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
@@ -44,28 +36,17 @@ public class Lesson {
     @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
     private Video video;
     
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
-    private PDF pdf;
-    
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
-    private Quiz quiz;
-    
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
-    private List<Comment> comments;
-    
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonProgress> progresses;
     
     // Constructeurs
     public Lesson() {
-        this.isFree = false;
     }
     
     public Lesson(String title, Integer orderIndex, Section section) {
         this.title = title;
         this.orderIndex = orderIndex;
         this.section = section;
-        this.isFree = false;
     }
     
     // Getters et Setters
@@ -93,22 +74,6 @@ public class Lesson {
         this.orderIndex = orderIndex;
     }
     
-    public Integer getDuration() {
-        return duration;
-    }
-    
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-    
-    public Boolean getIsFree() {
-        return isFree;
-    }
-    
-    public void setIsFree(Boolean isFree) {
-        this.isFree = isFree;
-    }
-    
     public Section getSection() {
         return section;
     }
@@ -123,30 +88,6 @@ public class Lesson {
     
     public void setVideo(Video video) {
         this.video = video;
-    }
-    
-    public PDF getPdf() {
-        return pdf;
-    }
-    
-    public void setPdf(PDF pdf) {
-        this.pdf = pdf;
-    }
-    
-    public Quiz getQuiz() {
-        return quiz;
-    }
-    
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
-    
-    public List<Comment> getComments() {
-        return comments;
-    }
-    
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
     
     public List<LessonProgress> getProgresses() {

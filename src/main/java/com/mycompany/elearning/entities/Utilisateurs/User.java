@@ -5,13 +5,14 @@
 package com.mycompany.elearning.entities.Utilisateurs;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 /**
  *
  * @author ousam713
  */
+
+
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -35,12 +36,8 @@ public abstract class User {
     @Column(nullable = false)
     private String lastName;
     
-    private String profilePicture;
-    
     @Column(nullable = false)
     private LocalDateTime dateCreated;
-    
-    private LocalDateTime lastLogin;
     
     // Constructeurs
     public User() {
@@ -105,27 +102,11 @@ public abstract class User {
         this.lastName = lastName;
     }
     
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-    
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-    
     public LocalDateTime getDateCreated() {
         return dateCreated;
     }
     
     public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
-    }
-    
-    public LocalDateTime getLastLogin() {
-        return lastLogin;
-    }
-    
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
     }
 }

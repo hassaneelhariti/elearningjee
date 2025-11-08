@@ -5,10 +5,10 @@
 package com.mycompany.elearning.entities.EnrollementProgression;
 
 
+
 import com.mycompany.elearning.entities.Contenu.Course;
 import com.mycompany.elearning.entities.Utilisateurs.Student;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,14 +28,7 @@ public class Enrollment {
     @Column(nullable = false)
     private LocalDateTime enrollmentDate;
     
-    private LocalDateTime completionDate;
-    
-    private Float progress;
-    
-    private LocalDateTime lastAccessedDate;
-    
-    @Column(nullable = false)
-    private Boolean certificateIssued;
+    private Float progress; // 0.0 à 100.0
     
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
@@ -48,14 +41,10 @@ public class Enrollment {
     @OneToMany(mappedBy = "enrollment", cascade = CascadeType.ALL)
     private List<LessonProgress> lessonProgresses;
     
-    @OneToOne(mappedBy = "enrollment", cascade = CascadeType.ALL)
-    private Certificate certificate;
-    
     // Constructeurs
     public Enrollment() {
         this.enrollmentDate = LocalDateTime.now();
         this.progress = 0.0f;
-        this.certificateIssued = false;
     }
     
     public Enrollment(Student student, Course course) {
@@ -63,7 +52,6 @@ public class Enrollment {
         this.course = course;
         this.enrollmentDate = LocalDateTime.now();
         this.progress = 0.0f;
-        this.certificateIssued = false;
     }
     
     // Getters et Setters
@@ -83,36 +71,12 @@ public class Enrollment {
         this.enrollmentDate = enrollmentDate;
     }
     
-    public LocalDateTime getCompletionDate() {
-        return completionDate;
-    }
-    
-    public void setCompletionDate(LocalDateTime completionDate) {
-        this.completionDate = completionDate;
-    }
-    
     public Float getProgress() {
         return progress;
     }
     
     public void setProgress(Float progress) {
         this.progress = progress;
-    }
-    
-    public LocalDateTime getLastAccessedDate() {
-        return lastAccessedDate;
-    }
-    
-    public void setLastAccessedDate(LocalDateTime lastAccessedDate) {
-        this.lastAccessedDate = lastAccessedDate;
-    }
-    
-    public Boolean getCertificateIssued() {
-        return certificateIssued;
-    }
-    
-    public void setCertificateIssued(Boolean certificateIssued) {
-        this.certificateIssued = certificateIssued;
     }
     
     public Student getStudent() {
@@ -137,13 +101,5 @@ public class Enrollment {
     
     public void setLessonProgresses(List<LessonProgress> lessonProgresses) {
         this.lessonProgresses = lessonProgresses;
-    }
-    
-    public Certificate getCertificate() {
-        return certificate;
-    }
-    
-    public void setCertificate(Certificate certificate) {
-        this.certificate = certificate;
     }
 }
