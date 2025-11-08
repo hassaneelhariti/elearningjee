@@ -9,9 +9,9 @@
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/elearning?createDatabaseIfNotExist=true"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="@Hassan-hariti2@"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/e-learning-platform?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
+            <property name="jakarta.persistence.jdbc.user" value="javaapp"/>
+            <property name="jakarta.persistence.jdbc.password" value="ouSSAmA713benZZi$"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
