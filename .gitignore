@@ -83,3 +83,4 @@ application-dev.properties
 # Uploads utilisateurs
 uploads/
 temp/src/main/resources/META-INF/persistence.xml
+src/main/resources/META-INF/persistence.xml\342\200\216
