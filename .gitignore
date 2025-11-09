@@ -82,4 +82,4 @@ application-dev.properties
 
 # Uploads utilisateurs
 uploads/
-temp/
+temp/src/main/resources/META-INF/persistence.xml
