@@ -7,10 +7,6 @@ hibernate.cfg.xml
 src/main/resources/hibernate.cfg.xml
 
 
-# Fichiers de test unitaires locaux
-*.test
-*Test.java
-src/main/java/com/mycompany/elearning/controller/HibernateTest.java
 
 # Bases de données de test locales
 *.db
