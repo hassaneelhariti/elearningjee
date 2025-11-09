@@ -83,3 +83,6 @@ application-dev.properties
 # Uploads utilisateurs
 uploads/
 temp/
+
+
+.smarttomcat/
