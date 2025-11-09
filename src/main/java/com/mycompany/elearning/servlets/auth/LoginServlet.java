@@ -16,11 +16,11 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // ✅ INITIALISATION PROPRE
+
         UserDAO userDAO = new UserDAO(HibernateUtil.getSessionFactory());
         JWTUtil jwtUtil = new JWTUtil();
         authService = new AuthService(userDAO, jwtUtil);
-        System.out.println("✅ LoginServlet initialisé avec architecture DAO/Service");
+
     }
 
     @Override
@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // ✅ APPEL SIMPLE AU SERVICE
+
         AuthService.AuthResult result = authService.authenticate(email, password);
 
         if (result.isSuccess()) {
@@ -46,7 +46,7 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    // ✅ MÉTHODES SÉPARÉES POUR CHAQUE RESPONSABILITÉ
+
     private void showLoginPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String message = request.getParameter("message");
