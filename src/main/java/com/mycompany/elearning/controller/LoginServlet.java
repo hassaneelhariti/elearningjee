@@ -35,6 +35,12 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String userType = request.getParameter("userType");
         
+        // DEBUG LOGGING
+        System.out.println("🔍 LOGIN ATTEMPT:");
+        System.out.println("📧 Email: " + email);
+        System.out.println("🔑 Password: " + password);
+        System.out.println("👤 UserType: " + userType);
+        
         HttpSession session = request.getSession();
         
         if (userType == null || userType.isEmpty()) {
