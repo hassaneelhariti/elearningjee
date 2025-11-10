@@ -26,7 +26,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- JPA avec Hibernate -->
+    <!-- JPA avec Hibernate (VOTRE VERSION - GARDEZ) -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-core</artifactId>
@@ -41,7 +41,6 @@
     </dependency>
 
     <!-- JSTL pour JSP -->
-
     <dependency>
       <groupId>jakarta.servlet.jsp.jstl</groupId>
       <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -54,7 +53,22 @@
       <artifactId>jakarta.servlet.jsp.jstl</artifactId>
       <version>3.0.1</version>
     </dependency>
-    <!-- Dépendances JWT -->
+
+    <!-- AJOUT: C3P0 Connection Pool (IMPORTANT) -->
+    <dependency>
+      <groupId>com.mchange</groupId>
+      <artifactId>c3p0</artifactId>
+      <version>0.9.5.5</version>
+    </dependency>
+
+    <!-- AJOUT: Logging (Optionnel) -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.9</version>
+    </dependency>
+
+    <!-- Dépendances JWT (GARDEZ) -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
