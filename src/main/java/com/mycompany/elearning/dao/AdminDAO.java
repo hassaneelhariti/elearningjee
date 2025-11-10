@@ -1,6 +1,7 @@
+
 package com.mycompany.elearning.dao;
 
-import com.mycompany.elearning.entities.EnrollementProgression.LessonProgress;
+import com.mycompany.elearning.entities.Utilisateurs.Admin;
 import com.mycompany.elearning.utils.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -8,17 +9,20 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
 
-public class LessonProgressDao {
+/**
+ * DAO pour Admin
+ */
+public class AdminDAO {
     
-    public LessonProgress save(LessonProgress progress) {
+    public Admin save(Admin admin) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.save(progress);
+            session.save(admin);
             tx.commit();
-            return progress;
+            return admin;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -28,15 +32,15 @@ public class LessonProgressDao {
         }
     }
     
-    public LessonProgress update(LessonProgress progress) {
+    public Admin update(Admin admin) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.update(progress);
+            session.update(admin);
             tx.commit();
-            return progress;
+            return admin;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -46,13 +50,13 @@ public class LessonProgressDao {
         }
     }
     
-    public void delete(LessonProgress progress) {
+    public void delete(Admin admin) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.delete(progress);
+            session.delete(admin);
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
@@ -63,69 +67,49 @@ public class LessonProgressDao {
         }
     }
     
-    public LessonProgress findById(Long id) {
+    public Admin findById(Long id) {
         Session session = null;
-        LessonProgress progress = null;
+        Admin admin = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            progress = session.get(LessonProgress.class, id);
+            admin = session.get(Admin.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return progress;
+        return admin;
     }
     
-    public List<LessonProgress> findAll() {
+    public List<Admin> findAll() {
         Session session = null;
-        List<LessonProgress> progresses = null;
+        List<Admin> admins = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<LessonProgress> query = session.createQuery("FROM LessonProgress", LessonProgress.class);
-            progresses = query.list();
+            Query<Admin> query = session.createQuery("FROM Admin", Admin.class);
+            admins = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return progresses;
+        return admins;
     }
     
-    public LessonProgress findByEnrollmentAndLesson(Long enrollmentId, Long lessonId) {
+    public Admin findByEmail(String email) {
         Session session = null;
-        LessonProgress progress = null;
+        Admin admin = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<LessonProgress> query = session.createQuery(
-                "FROM LessonProgress lp WHERE lp.enrollment.id = :enrollmentId AND lp.lesson.id = :lessonId", 
-                LessonProgress.class);
-            query.setParameter("enrollmentId", enrollmentId);
-            query.setParameter("lessonId", lessonId);
-            progress = query.uniqueResult();
+            Query<Admin> query = session.createQuery(
+                "FROM Admin WHERE email = :email", Admin.class);
+            query.setParameter("email", email);
+            admin = query.uniqueResult();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return progress;
-    }
-    
-    public List<LessonProgress> findByEnrollmentId(Long enrollmentId) {
-        Session session = null;
-        List<LessonProgress> progresses = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query<LessonProgress> query = session.createQuery(
-                "FROM LessonProgress lp WHERE lp.enrollment.id = :enrollmentId", 
-                LessonProgress.class);
-            query.setParameter("enrollmentId", enrollmentId);
-            progresses = query.list();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-        return progresses;
+        return admin;
     }
 }

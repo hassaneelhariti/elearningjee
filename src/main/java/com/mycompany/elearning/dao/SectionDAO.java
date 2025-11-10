@@ -1,6 +1,6 @@
 package com.mycompany.elearning.dao;
 
-import com.mycompany.elearning.entities.Utilisateurs.Admin;
+import com.mycompany.elearning.entities.Contenu.Section;
 import com.mycompany.elearning.utils.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -8,17 +8,20 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
 
-public class AdminDao {
+/**
+ * DAO pour Section
+ */
+public class SectionDAO {
     
-    public Admin save(Admin admin) {
+    public Section save(Section section) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.save(admin);
+            session.save(section);
             tx.commit();
-            return admin;
+            return section;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -28,15 +31,15 @@ public class AdminDao {
         }
     }
     
-    public Admin update(Admin admin) {
+    public Section update(Section section) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.update(admin);
+            session.update(section);
             tx.commit();
-            return admin;
+            return section;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -46,13 +49,13 @@ public class AdminDao {
         }
     }
     
-    public void delete(Admin admin) {
+    public void delete(Section section) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.delete(admin);
+            session.delete(section);
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
@@ -63,66 +66,35 @@ public class AdminDao {
         }
     }
     
-    public Admin findById(Long id) {
+    public Section findById(Long id) {
         Session session = null;
-        Admin admin = null;
+        Section section = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            admin = session.get(Admin.class, id);
+            section = session.get(Section.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return admin;
+        return section;
     }
     
-    public List<Admin> findAll() {
+    public List<Section> findByCourseId(Long courseId) {
         Session session = null;
-        List<Admin> admins = null;
+        List<Section> sections = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Admin> query = session.createQuery("FROM Admin", Admin.class);
-            admins = query.list();
+            Query<Section> query = session.createQuery(
+                "FROM Section s WHERE s.course.id = :courseId ORDER BY s.orderIndex", 
+                Section.class);
+            query.setParameter("courseId", courseId);
+            sections = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return admins;
-    }
-    
-    public Admin findByEmail(String email) {
-        Session session = null;
-        Admin admin = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query<Admin> query = session.createQuery(
-                "FROM Admin WHERE email = :email", Admin.class);
-            query.setParameter("email", email);
-            admin = query.uniqueResult();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-        return admin;
-    }
-    
-    public Admin findByUsername(String username) {
-        Session session = null;
-        Admin admin = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query<Admin> query = session.createQuery(
-                "FROM Admin WHERE username = :username", Admin.class);
-            query.setParameter("username", username);
-            admin = query.uniqueResult();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-        return admin;
+        return sections;
     }
 }

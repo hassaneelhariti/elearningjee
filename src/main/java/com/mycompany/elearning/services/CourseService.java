@@ -1,84 +1,81 @@
 package com.mycompany.elearning.services;
 
-import com.mycompany.elearning.dao.CourseDao;
-import com.mycompany.elearning.dao.SectionDao;
-import com.mycompany.elearning.dao.EnrollmentDao;
+import com.mycompany.elearning.dao.CourseDAO;
+import com.mycompany.elearning.dao.SectionDAO;
+import com.mycompany.elearning.dao.EnrollmentDAO;
 import com.mycompany.elearning.entities.Contenu.Course;
 import com.mycompany.elearning.entities.Contenu.Section;
 import java.util.List;
 
+/**
+ * Service pour gérer les cours
+ */
 public class CourseService {
     
-    private CourseDao courseDao;
-    private SectionDao sectionDao;
-    private EnrollmentDao enrollmentDao;
-    
-    public CourseService() {
-        this.courseDao = new CourseDao();
-        this.sectionDao = new SectionDao();
-        this.enrollmentDao = new EnrollmentDao();
-    }
+    private CourseDAO courseDAO = new CourseDAO();
+    private SectionDAO sectionDAO = new SectionDAO();
+    private EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
     
     public Course createCourse(Course course) {
-        return courseDao.save(course);
+        return courseDAO.save(course);
     }
     
     public Course updateCourse(Course course) {
-        return courseDao.update(course);
+        return courseDAO.update(course);
     }
     
     public void deleteCourse(Long courseId) {
-        Course course = courseDao.findById(courseId);
+        Course course = courseDAO.findById(courseId);
         if (course != null) {
-            courseDao.delete(course);
+            courseDAO.delete(course);
         }
     }
     
-    public Course getCourseById(Long id) {
-        return courseDao.findById(id);
+    public Course getCourseById(Long courseId) {
+        return courseDAO.findById(courseId);
     }
     
     public List<Course> getAllCourses() {
-        return courseDao.findAll();
+        return courseDAO.findAll();
     }
     
     public List<Course> getPublishedCourses() {
-        return courseDao.findPublishedCourses();
+        return courseDAO.findPublishedCourses();
     }
     
     public List<Course> getCoursesByLevel(String level) {
-        return courseDao.findByLevel(level);
+        return courseDAO.findByLevel(level);
     }
     
     public List<Course> searchCourses(String keyword) {
-        return courseDao.searchByTitle(keyword);
+        return courseDAO.searchByTitle(keyword);
     }
     
     public List<Course> getCoursesByTeacher(Long teacherId) {
-        return courseDao.findByTeacherId(teacherId);
+        return courseDAO.findByTeacherId(teacherId);
     }
     
     public void publishCourse(Long courseId) {
-        Course course = courseDao.findById(courseId);
+        Course course = courseDAO.findById(courseId);
         if (course != null) {
             course.setIsPublished(true);
-            courseDao.update(course);
+            courseDAO.update(course);
         }
     }
     
     public void unpublishCourse(Long courseId) {
-        Course course = courseDao.findById(courseId);
+        Course course = courseDAO.findById(courseId);
         if (course != null) {
             course.setIsPublished(false);
-            courseDao.update(course);
+            courseDAO.update(course);
         }
     }
     
     public List<Section> getCourseSections(Long courseId) {
-        return sectionDao.findByCourseId(courseId);
+        return sectionDAO.findByCourseId(courseId);
     }
     
-    public long getEnrollmentCount(Long courseId) {
-        return enrollmentDao.countByCourseId(courseId);
+    public long getCourseEnrollmentCount(Long courseId) {
+        return enrollmentDAO.countByCourseId(courseId);
     }
 }

@@ -1,24 +1,26 @@
 package com.mycompany.elearning.dao;
 
-import com.mycompany.elearning.entities.Contenu.Section;
+import com.mycompany.elearning.entities.Contenu.PDF;
 import com.mycompany.elearning.utils.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import java.util.List;
 
-public class SectionDao {
+/**
+ * DAO pour PDF
+ */
+public class PDFDAO {
     
-    public Section save(Section section) {
+    public PDF save(PDF pdf) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.save(section);
+            session.save(pdf);
             tx.commit();
-            return section;
+            return pdf;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -28,15 +30,15 @@ public class SectionDao {
         }
     }
     
-    public Section update(Section section) {
+    public PDF update(PDF pdf) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.update(section);
+            session.update(pdf);
             tx.commit();
-            return section;
+            return pdf;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -46,13 +48,13 @@ public class SectionDao {
         }
     }
     
-    public void delete(Section section) {
+    public void delete(PDF pdf) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.delete(section);
+            session.delete(pdf);
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
@@ -63,50 +65,35 @@ public class SectionDao {
         }
     }
     
-    public Section findById(Long id) {
+    public PDF findById(Long id) {
         Session session = null;
-        Section section = null;
+        PDF pdf = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            section = session.get(Section.class, id);
+            pdf = session.get(PDF.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return section;
+        return pdf;
     }
     
-    public List<Section> findAll() {
+    public PDF findByLessonId(Long lessonId) {
         Session session = null;
-        List<Section> sections = null;
+        PDF pdf = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Section> query = session.createQuery("FROM Section", Section.class);
-            sections = query.list();
+            Query<PDF> query = session.createQuery(
+                "FROM PDF p WHERE p.lesson.id = :lessonId", 
+                PDF.class);
+            query.setParameter("lessonId", lessonId);
+            pdf = query.uniqueResult();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return sections;
-    }
-    
-    public List<Section> findByCourseId(Long courseId) {
-        Session session = null;
-        List<Section> sections = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query<Section> query = session.createQuery(
-                "FROM Section s WHERE s.course.id = :courseId ORDER BY s.orderIndex", 
-                Section.class);
-            query.setParameter("courseId", courseId);
-            sections = query.list();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-        return sections;
+        return pdf;
     }
 }

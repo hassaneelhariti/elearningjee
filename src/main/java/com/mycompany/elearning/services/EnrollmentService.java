@@ -1,77 +1,88 @@
 package com.mycompany.elearning.services;
 
-import com.mycompany.elearning.dao.EnrollmentDao;
-import com.mycompany.elearning.dao.LessonProgressDao;
-import com.mycompany.elearning.dao.StudentDao;
-import com.mycompany.elearning.dao.CourseDao;
+import com.mycompany.elearning.dao.EnrollmentDAO;
+import com.mycompany.elearning.dao.LessonProgressDAO;
+import com.mycompany.elearning.dao.CourseDAO;
+import com.mycompany.elearning.dao.StudentDAO;
 import com.mycompany.elearning.entities.EnrollementProgression.Enrollment;
 import com.mycompany.elearning.entities.EnrollementProgression.LessonProgress;
-import com.mycompany.elearning.entities.Utilisateurs.Student;
 import com.mycompany.elearning.entities.Contenu.Course;
+import com.mycompany.elearning.entities.Utilisateurs.Student;
 import java.util.List;
 
+/**
+ * Service pour gérer les inscriptions
+ */
 public class EnrollmentService {
     
-    private EnrollmentDao enrollmentDao;
-    private LessonProgressDao lessonProgressDao;
-    private StudentDao studentDao;
-    private CourseDao courseDao;
-    
-    public EnrollmentService() {
-        this.enrollmentDao = new EnrollmentDao();
-        this.lessonProgressDao = new LessonProgressDao();
-        this.studentDao = new StudentDao();
-        this.courseDao = new CourseDao();
-    }
+    private EnrollmentDAO enrollmentDAO = new EnrollmentDAO();
+    private LessonProgressDAO lessonProgressDAO = new LessonProgressDAO();
+    private CourseDAO courseDAO = new CourseDAO();
+    private StudentDAO studentDAO = new StudentDAO();
     
     public Enrollment enrollStudent(Long studentId, Long courseId) {
-        Enrollment existing = enrollmentDao.findByStudentAndCourse(studentId, courseId);
-        if (existing != null) {
+        Student student = studentDAO.findById(studentId);
+        Course course = courseDAO.findById(courseId);
+        
+        if (student != null && course != null) {
+            // Vérifier si déjà inscrit
+            Enrollment existing = enrollmentDAO.findByStudentAndCourse(studentId, courseId);
+            if (existing == null) {
+                Enrollment enrollment = new Enrollment(student, course);
+                return enrollmentDAO.save(enrollment);
+            }
             return existing;
         }
-        
-        Student student = studentDao.findById(studentId);
-        Course course = courseDao.findById(courseId);
-        
-        if (student == null || course == null) {
-            return null;
-        }
-        
-        Enrollment enrollment = new Enrollment(student, course);
-        return enrollmentDao.save(enrollment);
+        return null;
     }
     
     public List<Enrollment> getStudentEnrollments(Long studentId) {
-        return studentDao.getStudentEnrollments(studentId);
+        return enrollmentDAO.findByStudentId(studentId);
+    }
+    
+    public List<Enrollment> getCourseEnrollments(Long courseId) {
+        return enrollmentDAO.findByCourseId(courseId);
     }
     
     public Enrollment getEnrollment(Long enrollmentId) {
-        return enrollmentDao.findById(enrollmentId);
+        return enrollmentDAO.findById(enrollmentId);
     }
     
-    public void updateProgress(Long enrollmentId, Float progress) {
-        Enrollment enrollment = enrollmentDao.findById(enrollmentId);
+    public void updateProgress(Long enrollmentId, Long lessonId, boolean completed, Integer position) {
+        LessonProgress progress = lessonProgressDAO.findByEnrollmentAndLesson(enrollmentId, lessonId);
+        
+        if (progress == null) {
+            progress = new LessonProgress();
+            progress.setEnrollment(enrollmentDAO.findById(enrollmentId));
+            progress.setLesson(new com.mycompany.elearning.dao.LessonDAO().findById(lessonId));
+            progress.setIsCompleted(completed);
+            progress.setLastPosition(position);
+            lessonProgressDAO.save(progress);
+        } else {
+            progress.setIsCompleted(completed);
+            progress.setLastPosition(position);
+            lessonProgressDAO.update(progress);
+        }
+        
+        // Calculer et mettre à jour la progression globale
+        updateEnrollmentProgress(enrollmentId);
+    }
+    
+    private void updateEnrollmentProgress(Long enrollmentId) {
+        Enrollment enrollment = enrollmentDAO.findById(enrollmentId);
         if (enrollment != null) {
-            enrollment.setProgress(progress);
-            enrollmentDao.update(enrollment);
+            List<LessonProgress> allProgress = lessonProgressDAO.findByEnrollmentId(enrollmentId);
+            long completedCount = lessonProgressDAO.countCompletedLessons(enrollmentId);
+            
+            if (!allProgress.isEmpty()) {
+                float progressPercent = (completedCount * 100.0f) / allProgress.size();
+                enrollment.setProgress(progressPercent);
+                enrollmentDAO.update(enrollment);
+            }
         }
     }
     
-    public LessonProgress markLessonComplete(Long enrollmentId, Long lessonId) {
-        LessonProgress progress = lessonProgressDao.findByEnrollmentAndLesson(enrollmentId, lessonId);
-        if (progress == null) {
-            return null;
-        }
-        progress.setIsCompleted(true);
-        return lessonProgressDao.update(progress);
-    }
-    
-    public LessonProgress updateLessonPosition(Long enrollmentId, Long lessonId, Integer position) {
-        LessonProgress progress = lessonProgressDao.findByEnrollmentAndLesson(enrollmentId, lessonId);
-        if (progress == null) {
-            return null;
-        }
-        progress.setLastPosition(position);
-        return lessonProgressDao.update(progress);
+    public LessonProgress getLessonProgress(Long enrollmentId, Long lessonId) {
+        return lessonProgressDAO.findByEnrollmentAndLesson(enrollmentId, lessonId);
     }
 }

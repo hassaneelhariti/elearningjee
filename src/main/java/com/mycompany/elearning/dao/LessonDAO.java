@@ -8,7 +8,10 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
 
-public class LessonDao {
+/**
+ * DAO pour Lesson
+ */
+public class LessonDAO {
     
     public Lesson save(Lesson lesson) {
         Session session = null;
@@ -75,21 +78,6 @@ public class LessonDao {
             if (session != null) session.close();
         }
         return lesson;
-    }
-    
-    public List<Lesson> findAll() {
-        Session session = null;
-        List<Lesson> lessons = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            Query<Lesson> query = session.createQuery("FROM Lesson", Lesson.class);
-            lessons = query.list();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-        return lessons;
     }
     
     public List<Lesson> findBySectionId(Long sectionId) {

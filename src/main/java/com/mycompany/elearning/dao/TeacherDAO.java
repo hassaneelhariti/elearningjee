@@ -1,6 +1,7 @@
 package com.mycompany.elearning.dao;
 
-import com.mycompany.elearning.entities.EnrollementProgression.Enrollment;
+import com.mycompany.elearning.entities.Utilisateurs.Teacher;
+import com.mycompany.elearning.entities.Contenu.Course;
 import com.mycompany.elearning.utils.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -8,17 +9,20 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.util.List;
 
-public class EnrollmentDao {
+/**
+ * DAO pour Teacher
+ */
+public class TeacherDAO {
     
-    public Enrollment save(Enrollment enrollment) {
+    public Teacher save(Teacher teacher) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.save(enrollment);
+            session.save(teacher);
             tx.commit();
-            return enrollment;
+            return teacher;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -28,15 +32,15 @@ public class EnrollmentDao {
         }
     }
     
-    public Enrollment update(Enrollment enrollment) {
+    public Teacher update(Teacher teacher) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.update(enrollment);
+            session.update(teacher);
             tx.commit();
-            return enrollment;
+            return teacher;
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -46,13 +50,13 @@ public class EnrollmentDao {
         }
     }
     
-    public void delete(Enrollment enrollment) {
+    public void delete(Teacher teacher) {
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             tx = session.beginTransaction();
-            session.delete(enrollment);
+            session.delete(teacher);
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) tx.rollback();
@@ -63,87 +67,85 @@ public class EnrollmentDao {
         }
     }
     
-    public Enrollment findById(Long id) {
+    public Teacher findById(Long id) {
         Session session = null;
-        Enrollment enrollment = null;
+        Teacher teacher = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            enrollment = session.get(Enrollment.class, id);
+            teacher = session.get(Teacher.class, id);
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return enrollment;
+        return teacher;
     }
     
-    public List<Enrollment> findAll() {
+    public List<Teacher> findAll() {
         Session session = null;
-        List<Enrollment> enrollments = null;
+        List<Teacher> teachers = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Enrollment> query = session.createQuery("FROM Enrollment", Enrollment.class);
-            enrollments = query.list();
+            Query<Teacher> query = session.createQuery("FROM Teacher", Teacher.class);
+            teachers = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return enrollments;
+        return teachers;
     }
     
-    public Enrollment findByStudentAndCourse(Long studentId, Long courseId) {
+    public Teacher findByEmail(String email) {
         Session session = null;
-        Enrollment enrollment = null;
+        Teacher teacher = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Enrollment> query = session.createQuery(
-                "FROM Enrollment e WHERE e.student.id = :studentId AND e.course.id = :courseId", 
-                Enrollment.class);
-            query.setParameter("studentId", studentId);
-            query.setParameter("courseId", courseId);
-            enrollment = query.uniqueResult();
+            Query<Teacher> query = session.createQuery(
+                "FROM Teacher WHERE email = :email", Teacher.class);
+            query.setParameter("email", email);
+            teacher = query.uniqueResult();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return enrollment;
+        return teacher;
     }
     
-    public List<Enrollment> findByCourseId(Long courseId) {
+    public List<Course> getTeacherCourses(Long teacherId) {
         Session session = null;
-        List<Enrollment> enrollments = null;
+        List<Course> courses = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Enrollment> query = session.createQuery(
-                "FROM Enrollment e WHERE e.course.id = :courseId", 
-                Enrollment.class);
-            query.setParameter("courseId", courseId);
-            enrollments = query.list();
+            Query<Course> query = session.createQuery(
+                "FROM Course c WHERE c.teacher.id = :teacherId ORDER BY c.dateCreated DESC", 
+                Course.class);
+            query.setParameter("teacherId", teacherId);
+            courses = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return enrollments;
+        return courses;
     }
     
-    public long countByCourseId(Long courseId) {
+    public List<Course> getPublishedCoursesByTeacher(Long teacherId) {
         Session session = null;
-        Long count = 0L;
+        List<Course> courses = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            Query<Long> query = session.createQuery(
-                "SELECT COUNT(e) FROM Enrollment e WHERE e.course.id = :courseId", 
-                Long.class);
-            query.setParameter("courseId", courseId);
-            count = query.uniqueResult();
+            Query<Course> query = session.createQuery(
+                "FROM Course c WHERE c.teacher.id = :teacherId AND c.isPublished = true ORDER BY c.dateCreated DESC", 
+                Course.class);
+            query.setParameter("teacherId", teacherId);
+            courses = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             if (session != null) session.close();
         }
-        return count;
+        return courses;
     }
 }

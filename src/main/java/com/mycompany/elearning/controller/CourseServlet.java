@@ -1,9 +1,7 @@
 package com.mycompany.elearning.controller;
 
-import com.mycompany.elearning.services.CourseService;
-import com.mycompany.elearning.services.EnrollmentService;
 import com.mycompany.elearning.entities.Contenu.Course;
-import com.mycompany.elearning.entities.Contenu.Section;
+import com.mycompany.elearning.services.CourseService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,17 +10,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/courses")
+/**
+ * Servlet pour gérer les cours (affichage public)
+ */
+@WebServlet(name = "CourseServlet", urlPatterns = {"/courses"})
 public class CourseServlet extends HttpServlet {
     
-    private CourseService courseService;
-    private EnrollmentService enrollmentService;
-    
-    @Override
-    public void init() throws ServletException {
-        courseService = new CourseService();
-        enrollmentService = new EnrollmentService();
-    }
+    private CourseService courseService = new CourseService();
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,50 +38,67 @@ public class CourseServlet extends HttpServlet {
             case "search":
                 searchCourses(request, response);
                 break;
-            case "byLevel":
-                coursesByLevel(request, response);
-                break;
             default:
                 listCourses(request, response);
-                break;
         }
     }
     
     private void listCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Course> courses = courseService.getPublishedCourses();
+        
+        String level = request.getParameter("level");
+        List<Course> courses;
+        
+        if (level != null && !level.isEmpty()) {
+            courses = courseService.getCoursesByLevel(level);
+            request.setAttribute("selectedLevel", level);
+        } else {
+            courses = courseService.getPublishedCourses();
+        }
+        
         request.setAttribute("courses", courses);
         request.getRequestDispatcher("/WEB-INF/views/courses/list.jsp").forward(request, response);
     }
     
     private void viewCourse(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Long courseId = Long.parseLong(request.getParameter("id"));
-        Course course = courseService.getCourseById(courseId);
-        List<Section> sections = courseService.getCourseSections(courseId);
-        long enrollmentCount = courseService.getEnrollmentCount(courseId);
         
-        request.setAttribute("course", course);
-        request.setAttribute("sections", sections);
-        request.setAttribute("enrollmentCount", enrollmentCount);
-        request.getRequestDispatcher("/WEB-INF/views/courses/view.jsp").forward(request, response);
+        String idParam = request.getParameter("id");
+        if (idParam != null) {
+            try {
+                Long courseId = Long.parseLong(idParam);
+                Course course = courseService.getCourseById(courseId);
+                
+                if (course != null) {
+                    request.setAttribute("course", course);
+                    request.setAttribute("sections", courseService.getCourseSections(courseId));
+                    request.setAttribute("enrollmentCount", courseService.getCourseEnrollmentCount(courseId));
+                    request.getRequestDispatcher("/WEB-INF/views/courses/view.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/courses");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/courses");
+            }
+        } else {
+            response.sendRedirect(request.getContextPath() + "/courses");
+        }
     }
     
     private void searchCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         String keyword = request.getParameter("keyword");
-        List<Course> courses = courseService.searchCourses(keyword);
+        List<Course> courses;
+        
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            courses = courseService.searchCourses(keyword);
+            request.setAttribute("keyword", keyword);
+        } else {
+            courses = courseService.getPublishedCourses();
+        }
+        
         request.setAttribute("courses", courses);
-        request.setAttribute("keyword", keyword);
-        request.getRequestDispatcher("/WEB-INF/views/courses/list.jsp").forward(request, response);
-    }
-    
-    private void coursesByLevel(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String level = request.getParameter("level");
-        List<Course> courses = courseService.getCoursesByLevel(level);
-        request.setAttribute("courses", courses);
-        request.setAttribute("level", level);
         request.getRequestDispatcher("/WEB-INF/views/courses/list.jsp").forward(request, response);
     }
 }
