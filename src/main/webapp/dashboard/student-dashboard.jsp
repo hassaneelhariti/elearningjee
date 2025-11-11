@@ -26,7 +26,7 @@
     </div>
 
     <div class="menu">
-        <a href="mes-cours">📚 Mes Cours</a>
+        <a href="course">📚 Mes Cours</a>
         <a href="mes-devoirs">📝 Mes Devoirs</a>
         <a href="progression">📈 Ma Progression</a>
         <a href="profil">👤 Mon Profil</a>

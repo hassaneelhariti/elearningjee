@@ -76,8 +76,8 @@ public class LoginServlet extends HttpServlet {
     private void redirectToDashboard(HttpServletResponse response, String role) throws IOException {
         switch(role) {
             case "ADMIN": response.sendRedirect("admin-dashboard"); break;
-            case "TEACHER": response.sendRedirect("teacher-dashboard"); break;
-            case "STUDENT": response.sendRedirect("student-dashboard"); break;
+            case "TEACHER": response.sendRedirect("teacher/dashboard.jsp"); break;
+            case "STUDENT": response.sendRedirect("course"); break;
             default: response.sendRedirect("dashboard");
         }
     }
