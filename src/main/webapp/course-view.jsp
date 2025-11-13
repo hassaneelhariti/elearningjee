@@ -57,6 +57,9 @@
         <!-- Sidebar -->
         <div class="col-md-3 sidebar p-0">
             <div class="p-3 border-bottom">
+                <a href="${pageContext.request.contextPath}/my-courses" class="btn btn-sm btn-outline-secondary mb-2 w-100">
+                    <i class="fas fa-arrow-left me-1"></i>Retour à Mes Cours
+                </a>
                 <h5 class="mb-0">${not empty course.title ? course.title : 'Course'}</h5>
                 <div class="progress mt-2" style="height: 5px;">
                     <div class="progress-bar" style="width: ${not empty progressPercentage ? progressPercentage : 0}%"></div>
@@ -128,12 +131,17 @@
         <div class="col-md-9 main-content">
             <!-- Header -->
             <div class="p-3 border-bottom bg-light">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="courses">Courses</a></li>
-                        <li class="breadcrumb-item active">${not empty course.title ? course.title : 'Course'}</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center">
+                    <nav aria-label="breadcrumb" class="flex-grow-1">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/my-courses">Mes Cours</a></li>
+                            <li class="breadcrumb-item active">${not empty course.title ? course.title : 'Course'}</li>
+                        </ol>
+                    </nav>
+                    <a href="${pageContext.request.contextPath}/my-courses" class="btn btn-outline-secondary ms-3">
+                        <i class="fas fa-arrow-left me-2"></i>Retour à Mes Cours
+                    </a>
+                </div>
             </div>
 
             <!-- Lesson Content -->
@@ -142,8 +150,11 @@
                     <div class="p-4">
                         <!-- Lesson Header -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h3>${currentLesson.title}</h3>
+                            <div class="flex-grow-1">
+                                <a href="course-view?courseId=${course.id}" class="btn btn-sm btn-outline-secondary mb-2">
+                                    <i class="fas fa-arrow-left me-1"></i>Retour au cours
+                                </a>
+                                <h3 class="mt-2">${currentLesson.title}</h3>
                                 <c:if test="${not empty currentLesson.section and not empty currentLesson.section.title}">
                                     <p class="text-muted mb-0">Section: ${currentLesson.section.title}</p>
                                 </c:if>

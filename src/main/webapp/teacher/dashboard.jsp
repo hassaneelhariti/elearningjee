@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,6 +95,38 @@
         </div>
     </div>
 
+    <!-- Graphiques -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-pie me-2"></i>Statut des Cours
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="coursesStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-bar me-2"></i>Étudiants par Cours
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="studentsByCourseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Courses -->
     <div class="row">
         <div class="col-12">
@@ -179,5 +212,110 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Données pour les graphiques
+    <c:set var="publishedCount" value="0" />
+    <c:set var="draftCount" value="0" />
+    <c:forEach var="course" items="${courses}">
+        <c:if test="${course.isPublished}">
+            <c:set var="publishedCount" value="${publishedCount + 1}" />
+        </c:if>
+        <c:if test="${!course.isPublished}">
+            <c:set var="draftCount" value="${draftCount + 1}" />
+        </c:if>
+    </c:forEach>
+
+    // Graphique en camembert - Statut des cours
+    const statusCtx = document.getElementById('coursesStatusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Publiés', 'Brouillons'],
+            datasets: [{
+                data: [${publishedCount}, ${draftCount}],
+                backgroundColor: ['#28a745', '#ffc107'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Graphique en barres - Étudiants par cours
+    const studentsCtx = document.getElementById('studentsByCourseChart').getContext('2d');
+    <c:choose>
+        <c:when test="${not empty courses}">
+            const courseLabels = [];
+            const studentCounts = [];
+            <c:forEach var="course" items="${courses}">
+                <c:set var="courseTitle" value="${course.title}" />
+                <c:set var="shortTitle" value="${fn:length(courseTitle) > 15 ? fn:substring(courseTitle, 0, 15) : courseTitle}" />
+                courseLabels.push('<c:out value="${fn:replace(shortTitle, \"'\", \"\\'\")}" escapeXml="true" />');
+                <c:set var="studentCount" value="0" />
+                <c:if test="${not empty course.enrollments}">
+                    <c:set var="studentCount" value="${course.enrollments.size()}" />
+                </c:if>
+                studentCounts.push(${studentCount});
+            </c:forEach>
+            
+            new Chart(studentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: courseLabels,
+                    datasets: [{
+                        label: 'Nombre d\'étudiants',
+                        data: studentCounts,
+                        backgroundColor: '#2196F3',
+                        borderColor: '#1976D2',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        </c:when>
+        <c:otherwise>
+            new Chart(studentsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Aucun cours'],
+                    datasets: [{
+                        label: 'Nombre d\'étudiants',
+                        data: [0],
+                        backgroundColor: '#e0e0e0'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        </c:otherwise>
+    </c:choose>
+</script>
 </body>
 </html>

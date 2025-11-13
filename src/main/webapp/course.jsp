@@ -17,15 +17,9 @@
         </div>
 
         <ul class="nav-menu">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Bookmark</a></li>
-            <li><a href="course-view?courseId=5">Courses</a></li>
-            <li><a href="#">Tutorials</a></li>
-            <li><a href="#">Workshop</a></li>
-            <li><a href="#">Certifications</a></li>
-            <li><a href="#">Resources</a></li>
-            <li><a href="#">Events</a></li>
-            <li><a href="#">Community</a></li>
+            <li><a href="${pageContext.request.contextPath}/course" class="active">Cours Disponibles</a></li>
+            <li><a href="${pageContext.request.contextPath}/my-courses">Mes Cours Inscrits</a></li>
+            <li><a href="${pageContext.request.contextPath}/student-dashboard">Tableau de Bord</a></li>
         </ul>
 
         <hr class="sidebar-divider">
