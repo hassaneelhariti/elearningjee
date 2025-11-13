@@ -271,11 +271,11 @@
             <h1><i class="fas fa-graduation-cap me-3"></i>Welcome to E-Learning Platform</h1>
             <p>Transform your future with our comprehensive online learning platform. Access thousands of courses, learn from expert instructors, and achieve your goals at your own pace.</p>
             <div class="cta-buttons">
-                <a href="${pageContext.request.contextPath}/auth/register" class="btn-hero btn-primary-hero">
+                <a href="${pageContext.request.contextPath}/register" class="btn-hero btn-primary-hero">
                     <i class="fas fa-rocket"></i>
                     Start Learning Now
                 </a>
-                <a href="${pageContext.request.contextPath}/auth/login" class="btn-hero btn-outline-hero">
+                <a href="${pageContext.request.contextPath}/login" class="btn-hero btn-outline-hero">
                     <i class="fas fa-sign-in-alt"></i>
                     Login
                 </a>
