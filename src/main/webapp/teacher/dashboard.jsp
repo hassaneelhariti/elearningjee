@@ -9,13 +9,19 @@
     <title>Teacher Dashboard - E-Learning</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-<jsp:include page="header.jsp">
-    <jsp:param name="active" value="dashboard"/>
-</jsp:include>
+    <jsp:include page="/includes/top-bar.jsp">
+        <jsp:param name="role" value="TEACHER" />
+    </jsp:include>
+    <jsp:include page="/includes/teacher-sidebar.jsp">
+        <jsp:param name="active" value="dashboard" />
+    </jsp:include>
+    <jsp:include page="/includes/teacher-header.jsp" />
 
-<div class="container-fluid mt-4">
+    <div class="main-content">
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-4">
@@ -316,6 +322,7 @@
             });
         </c:otherwise>
     </c:choose>
-</script>
+           </script>
+    </div>
 </body>
 </html>

@@ -1,13 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes Cours - E-Learning</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/course.css">
+    <title>My Courses - E-Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
     <style>
         .enrolled-courses-container {
             padding: 20px;
@@ -233,43 +236,19 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <h1>Academia</h1>
-        </div>
+    <jsp:include page="/includes/top-bar.jsp">
+        <jsp:param name="role" value="STUDENT" />
+    </jsp:include>
+    <jsp:include page="/includes/student-sidebar.jsp">
+        <jsp:param name="active" value="courses" />
+    </jsp:include>
+    <jsp:include page="/includes/student-header.jsp" />
 
-        <ul class="nav-menu">
-            <li><a href="${pageContext.request.contextPath}/course">Cours Disponibles</a></li>
-            <li><a href="${pageContext.request.contextPath}/my-courses" class="active">Mes Cours</a></li>
-            <li><a href="${pageContext.request.contextPath}/student-dashboard">Tableau de Bord</a></li>
-        </ul>
-
-        <hr class="sidebar-divider">
-
-        <div class="user-section">
-            <c:if test="${not empty userName}">
-                <div class="user-name">${userName}</div>
-                <div class="user-role">${userRole.toLowerCase()}</div>
-            </c:if>
-        </div>
-
-        <div class="help-section">
-            <h3>Help Center</h3>
-            <ul class="help-links">
-                <li><a href="${pageContext.request.contextPath}/logout">Déconnexion</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Main Content -->
     <div class="main-content">
-        <div class="enrolled-courses-container">
-            <div class="page-header">
-                <h1>📚 Mes Cours Inscrits</h1>
-                <p>Continuez votre apprentissage et suivez votre progression</p>
-            </div>
+        <div class="card">
+            <h1 style="margin-bottom: 10px;">📚 My Enrolled Courses</h1>
+            <p style="color: #6B7280;">Continue your learning and track your progress</p>
+        </div>
 
             <!-- Messages d'alerte -->
             <c:if test="${not empty success}">
@@ -284,18 +263,18 @@
                 </div>
             </c:if>
 
-            <!-- Liste des cours inscrits -->
-            <c:if test="${empty enrolledCourses}">
-                <div class="empty-state">
-                    <div class="empty-state-icon">📖</div>
-                    <h2>Aucun cours inscrit</h2>
-                    <p>Vous n'êtes actuellement inscrit à aucun cours. Parcourez les cours disponibles et commencez votre apprentissage !</p>
-                    <a href="${pageContext.request.contextPath}/course" class="btn-browse">Parcourir les Cours</a>
-                </div>
-            </c:if>
+        <!-- Liste des cours inscrits -->
+        <c:if test="${empty enrolledCourses}">
+            <div class="card" style="text-align: center; padding: 60px 20px;">
+                <div style="font-size: 64px; margin-bottom: 20px;">📖</div>
+                <h2>No enrolled courses</h2>
+                <p style="color: #6B7280; margin-bottom: 30px;">You are currently not enrolled in any courses. Browse available courses and start learning!</p>
+                <a href="${pageContext.request.contextPath}/course" class="btn btn-primary">Browse Courses</a>
+            </div>
+        </c:if>
 
-            <c:if test="${not empty enrolledCourses}">
-                <div class="courses-list">
+        <c:if test="${not empty enrolledCourses}">
+            <div class="courses-list">
                     <c:forEach var="course" items="${enrolledCourses}">
                         <div class="enrolled-course-card">
                             <div class="course-header">
@@ -364,9 +343,9 @@
                     </c:forEach>
                 </div>
             </c:if>
-        </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

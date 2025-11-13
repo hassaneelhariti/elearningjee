@@ -1,61 +1,104 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Cours Disponibles</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/course.css">
+    <title>Available Courses - E-Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global.css">
+    <style>
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .course-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            border: 1px solid #E5E7EB;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .course-header h3 {
+            color: #1F2937;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .course-description {
+            color: #6B7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .course-meta {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #F9FAFB;
+            border-radius: 8px;
+        }
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .enroll-btn {
+            padding: 10px 20px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .enroll-btn:hover {
+            background: #2563EB;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .level-beginner { background: #DBEAFE; color: #1E40AF; }
+        .level-intermediate { background: #FEF3C7; color: #92400E; }
+        .level-advanced { background: #FCE4EC; color: #C2185B; }
+        .popular-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .topic-tag {
+            padding: 8px 16px;
+            background: #F3F4F6;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #4B5563;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <h1>Academia</h1>
-        </div>
+    <jsp:include page="/includes/top-bar.jsp">
+        <jsp:param name="role" value="STUDENT" />
+    </jsp:include>
+    <jsp:include page="/includes/student-sidebar.jsp">
+        <jsp:param name="active" value="available" />
+    </jsp:include>
+    <jsp:include page="/includes/student-header.jsp" />
 
-        <ul class="nav-menu">
-            <li><a href="${pageContext.request.contextPath}/course" class="active">Cours Disponibles</a></li>
-            <li><a href="${pageContext.request.contextPath}/my-courses">Mes Cours Inscrits</a></li>
-            <li><a href="${pageContext.request.contextPath}/student-dashboard">Tableau de Bord</a></li>
-        </ul>
-
-        <hr class="sidebar-divider">
-
-        <div class="user-section">
-            <c:if test="${not empty userName}">
-                <div class="user-name">${userName}</div>
-                <div class="user-role">${userRole.toLowerCase()}</div>
-            </c:if>
-            <c:if test="${empty userName}">
-                <a href="${pageContext.request.contextPath}/login" class="login-link">Se connecter</a>
-            </c:if>
-        </div>
-
-        <div class="help-section">
-            <h3>Help Center</h3>
-            <ul class="help-links">
-                <li><a href="#">My Account</a></li>
-                <li><a href="#">Figma Application</a></li>
-                <li><a href="#">Webflow Basic</a></li>
-                <li><a href="#">Adobe Photoshop</a></li>
-                <li><a href="#">Sketch Application</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Main Content -->
     <div class="main-content">
-        <div class="header">
-            <h1>Cours Disponibles</h1>
-            <c:if test="${not empty userName}">
-                <div class="user-info">
-                    Connecté en tant que <strong>${userName}</strong>
-                </div>
-            </c:if>
-        </div>
 
         <!-- Messages d'alerte -->
         <c:if test="${not empty success}">
@@ -71,46 +114,43 @@
         </c:if>
 
         <!-- Welcome Section -->
-        <div class="welcome-section">
-            <h2>Bienvenue, ${not empty userName ? userName : 'Étudiant'}!</h2>
-            <p>Découvrez tous nos cours disponibles et développez vos compétences.</p>
+        <div class="card">
+            <h2 style="margin-bottom: 10px;">Welcome, ${not empty userName ? userName : 'Student'}!</h2>
+            <p style="color: #6B7280;">Discover all available courses and develop your skills.</p>
         </div>
 
         <!-- Courses List -->
         <c:if test="${empty courses}">
-            <div class="empty-state">
-                <h2>Aucun cours disponible</h2>
-                <p>Il n'y a actuellement aucun cours disponible. Revenez plus tard!</p>
+            <div class="card" style="text-align: center; padding: 60px 20px;">
+                <h2>No courses available</h2>
+                <p style="color: #6B7280;">There are currently no courses available. Please come back later!</p>
             </div>
         </c:if>
 
         <c:if test="${not empty courses}">
             <div class="courses-grid">
                 <c:forEach var="course" items="${courses}" varStatus="loop">
-                    <!-- SUPPRIMER l'utilisation de course.id -->
-                    <div class="course-card fade-in" id="course-${loop.index}">
+                    <div class="course-card">
                         <div class="course-header">
                             <h3>${course.courseName}</h3>
                         </div>
                         <p class="course-description">${course.description}</p>
                         <div class="course-meta">
-                            <div class="course-teacher">
-                                <strong>Professeur:</strong> ${course.teacher}
+                            <div style="margin-bottom: 8px;">
+                                <strong>Teacher:</strong> ${course.teacher}
                             </div>
-                            <div class="course-level">
-                                <strong>Niveau:</strong>
-                                <span class="level-badge level-${course.level.toLowerCase()}">${course.level}</span>
+                            <div>
+                                <strong>Level:</strong>
+                                <span class="level-badge level-${fn:toLowerCase(course.level)}">${course.level}</span>
                             </div>
                         </div>
                         <div class="course-footer">
-                            <span class="course-price">Gratuit</span>
-
-                            <!-- Formulaire temporaire sans ID -->
-                            <form action="${pageContext.request.contextPath}/course" method="post" class="enroll-form">
+                            <span style="color: #10B981; font-weight: 600;">Free</span>
+                            <form action="${pageContext.request.contextPath}/course" method="post" style="display: inline;">
                                 <input type="hidden" name="action" value="enroll">
                                 <input type="hidden" name="courseName" value="${course.courseName}">
-                                <button type="submit" class="enroll-btn" id="enroll-btn-${loop.index}">
-                                    S'inscrire
+                                <button type="submit" class="enroll-btn">
+                                    Enroll
                                 </button>
                             </form>
                         </div>
@@ -120,19 +160,21 @@
         </c:if>
 
         <!-- Popular Topics -->
-        <h2 class="section-title">Sujets Populaires</h2>
-        <p class="section-subtitle">Basé sur votre activité d'apprentissage, nous avons sélectionné des sujets personnalisés pour vous.</p>
-
-        <div class="popular-topics">
-            <div class="topic-tag">Développement Web</div>
-            <div class="topic-tag">Design UX/UI</div>
-            <div class="topic-tag">Data Science</div>
-            <div class="topic-tag">Marketing Digital</div>
-            <div class="topic-tag">Photographie</div>
-            <div class="topic-tag">Langues</div>
+        <div class="card">
+            <h3 style="margin-bottom: 10px;">Popular Topics</h3>
+            <p style="color: #6B7280; margin-bottom: 20px;">Based on your learning activity, we've selected personalized topics for you.</p>
+            <div class="popular-topics">
+                <div class="topic-tag">Web Development</div>
+                <div class="topic-tag">UX/UI Design</div>
+                <div class="topic-tag">Data Science</div>
+                <div class="topic-tag">Digital Marketing</div>
+                <div class="topic-tag">Photography</div>
+                <div class="topic-tag">Languages</div>
+            </div>
         </div>
     </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
