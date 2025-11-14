@@ -29,13 +29,19 @@ public class Lesson {
     @Column(nullable = false)
     private Integer orderIndex;
     
+    @Column(name = "content_type")
+    private String contentType;
+
     @ManyToOne
     @JoinColumn(name = "section_id", nullable = false)
     private Section section;
     
-    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private Video video;
     
+    @OneToOne(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PDF pdf;
+
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
     private List<LessonProgress> progresses;
     
@@ -87,14 +93,36 @@ public class Lesson {
     }
     
     public void setVideo(Video video) {
+        if (video != null && video.getLesson() != this) {
+            video.setLesson(this);
+        }
         this.video = video;
     }
     
+    public PDF getPdf() {
+        return pdf;
+    }
+
+    public void setPdf(PDF pdf) {
+        if (pdf != null && pdf.getLesson() != this) {
+            pdf.setLesson(this);
+        }
+        this.pdf = pdf;
+    }
+
     public List<LessonProgress> getProgresses() {
         return progresses;
     }
     
     public void setProgresses(List<LessonProgress> progresses) {
         this.progresses = progresses;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
