@@ -341,9 +341,6 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/includes/top-bar.jsp">
-        <jsp:param name="role" value="STUDENT" />
-    </jsp:include>
     <jsp:include page="/includes/student-sidebar.jsp">
         <jsp:param name="active" value="dashboard" />
     </jsp:include>

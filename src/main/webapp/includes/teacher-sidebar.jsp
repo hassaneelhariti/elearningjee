@@ -3,7 +3,7 @@
 <div class="sidebar">
     <div class="sidebar-logo">Smart</div>
     <ul class="nav-menu">
-        <li><a href="${pageContext.request.contextPath}/teacher/dashboard" class="${param.active == 'dashboard' ? 'active' : ''}">
+        <li><a href="${pageContext.request.contextPath}/teacher/dashboard.jsp" class="${param.active == 'dashboard' ? 'active' : ''}">
             <i class="fas fa-home"></i> Dashboard
         </a></li>
         <li><a href="${pageContext.request.contextPath}/teacher/courses/list" class="${param.active == 'courses' ? 'active' : ''}">

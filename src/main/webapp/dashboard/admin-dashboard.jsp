@@ -32,9 +32,6 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/includes/top-bar.jsp">
-        <jsp:param name="role" value="ADMIN" />
-    </jsp:include>
     <jsp:include page="/includes/admin-sidebar.jsp">
         <jsp:param name="active" value="dashboard" />
     </jsp:include>

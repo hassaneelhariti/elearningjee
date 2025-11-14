@@ -93,7 +93,7 @@ public class CourseDao {
     // Nouvelles méthodes pour le sous-système enseignant
     public List<Course> findByTeacher(Long teacherId) {
         TypedQuery<Course> query = em.createQuery(
-                "SELECT c FROM Course c WHERE c.teacher.id = :teacherId ORDER BY c.dateCreated DESC",
+                "SELECT DISTINCT c FROM Course c LEFT JOIN FETCH c.enrollments WHERE c.teacher.id = :teacherId ORDER BY c.dateCreated DESC",
                 Course.class
         );
         query.setParameter("teacherId", teacherId);

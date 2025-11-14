@@ -13,9 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <jsp:include page="/includes/top-bar.jsp">
-        <jsp:param name="role" value="TEACHER" />
-    </jsp:include>
     <jsp:include page="/includes/teacher-sidebar.jsp">
         <jsp:param name="active" value="dashboard" />
     </jsp:include>
@@ -220,26 +217,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // Données pour les graphiques
-    <c:set var="publishedCount" value="0" />
-    <c:set var="draftCount" value="0" />
-    <c:forEach var="course" items="${courses}">
-        <c:if test="${course.isPublished}">
-            <c:set var="publishedCount" value="${publishedCount + 1}" />
-        </c:if>
-        <c:if test="${!course.isPublished}">
-            <c:set var="draftCount" value="${draftCount + 1}" />
-        </c:if>
-    </c:forEach>
+    // Données récupérées depuis la base de données
+    const publishedCount = ${not empty publishedCount ? publishedCount : 0};
+    const draftCount = ${not empty draftCount ? draftCount : 0};
 
-    // Graphique en camembert - Statut des cours
+    // Graphique en camembert - Statut des cours (données depuis DB)
     const statusCtx = document.getElementById('coursesStatusChart').getContext('2d');
     new Chart(statusCtx, {
         type: 'pie',
         data: {
             labels: ['Publiés', 'Brouillons'],
             datasets: [{
-                data: [${publishedCount}, ${draftCount}],
+                data: [publishedCount, draftCount],
                 backgroundColor: ['#28a745', '#ffc107'],
                 borderWidth: 2,
                 borderColor: '#fff'
@@ -251,12 +240,21 @@
             plugins: {
                 legend: {
                     position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                            return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                        }
+                    }
                 }
             }
         }
     });
 
-    // Graphique en barres - Étudiants par cours
+    // Graphique en barres - Étudiants par cours (données depuis DB)
     const studentsCtx = document.getElementById('studentsByCourseChart').getContext('2d');
     <c:choose>
         <c:when test="${not empty courses}">
@@ -299,6 +297,13 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Étudiants: ' + context.parsed.y;
+                                }
+                            }
                         }
                     }
                 }

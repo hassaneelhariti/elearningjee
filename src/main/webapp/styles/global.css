@@ -58,9 +58,9 @@ body {
 .sidebar {
     position: fixed;
     left: 0;
-    top: 36px;
+    top: 0;
     width: 250px;
-    height: calc(100vh - 36px);
+    height: 100vh;
     background: var(--sidebar-bg);
     color: white;
     padding: 20px 0;
@@ -140,7 +140,7 @@ body {
     align-items: center;
     box-shadow: var(--shadow);
     position: fixed;
-    top: 36px;
+    top: 0;
     left: 250px;
     right: 0;
     z-index: 998;
@@ -261,9 +261,9 @@ body {
 /* Main Content */
 .main-content {
     margin-left: 250px;
-    margin-top: 106px;
+    margin-top: 70px;
     padding: 30px;
-    min-height: calc(100vh - 106px);
+    min-height: calc(100vh - 70px);
 }
 
 /* Cards */
